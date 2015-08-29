@@ -35,9 +35,9 @@ public:
     
     void push(T&& _ele){
         pthread_mutex_lock(&mutex);
-        while (isFull()) //唤醒之后确认是否有空位，有时pthread_cond_signal可能唤醒多个wait的线程，只有通过循环才能知道被检查项是否真的符合要求
+        while (isFull())
              pthread_cond_wait(&cond_is_not_full, &mutex);
-        cout <<"Push"<< head << " " << len << endl;
+
         new (static_cast<T*>(buffer)+(head+len)%maxSize) T(std::move(_ele));
         len++;
         pthread_cond_signal(&cond_is_not_empty);
@@ -49,7 +49,7 @@ public:
         pthread_mutex_lock(&mutex);
         while (isEmpty())
             pthread_cond_wait(&cond_is_not_empty, &mutex);
-        T tmp = *(static_cast<T*>(buffer)+head);
+        T tmp = std::move(*(static_cast<T*>(buffer)+head));
         (static_cast<T*>(buffer) + head)->T::~T();
         head = (head+1) % maxSize;
         len--;
@@ -62,7 +62,7 @@ public:
         pthread_mutex_lock(&mutex);
         while (isEmpty())
             pthread_cond_wait(&cond_is_not_empty, &mutex);
-        cout << "Popto" << head << " " << len << endl;
+
         v = std::move(*(static_cast<T*>(buffer)+head));
         (static_cast<T*>(buffer) + head)->T::~T();
         head = (head+1) % maxSize;
