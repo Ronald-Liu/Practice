@@ -19,12 +19,12 @@ bool smaller(myClass& a, myClass &b){
 }
 heap<myClass, smaller> h;
 int main(){
-for (int i = 0; i < 10; i++){
+for (int i = 0; i < 40; i++){
 myClass t(10-i);
 h.push(std::move(t));
 }
 
-for (int i = 0; i < 5; i++)
+for (int i = 0; i < 10; i++)
     {
 myClass t;
 h.popTo(t);

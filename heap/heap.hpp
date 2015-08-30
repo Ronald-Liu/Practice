@@ -48,10 +48,10 @@ class heap{
             return;
 
         for (int i = 0; i < size; i++){
-            new (tmp+i) T(getElement(i));
+            new (tmp+i) T(std::move(getElement(i)));
             getElement(i).T::~T();
         }
-        free(buffer);
+       
         buffer = tmp;
         capacity = s;
     }
