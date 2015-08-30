@@ -17,20 +17,22 @@ public:
 bool smaller(myClass& a, myClass &b){
     return a.getValue() < b.getValue();
 }
+
 heap<myClass, smaller> h;
+
 int main(){
-for (int i = 0; i < 40; i++){
-myClass t(10-i);
-h.push(std::move(t));
-}
+    for (int i = 0; i < 40; i++){
+        myClass t(10-i);
+        h.push(std::move(t));
+    }
 
-for (int i = 0; i < 10; i++)
-    {
-myClass t;
-h.popTo(t);
-cout << t.getValue()  << endl;
-}
+    for (int i = 0; i < 10; i++)
+        {
+            myClass t;
+            h.popTo(t);
+            cout << t.getValue()  << endl;
+        }
 
 
-return 0;
+    return 0;
 }

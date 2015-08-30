@@ -2,6 +2,7 @@
 #define __HEAP_H_
 
 #include <cstdint>
+#include <utility>
 
 
 template <typename T, bool (*smaller)(T&, T&)>
@@ -43,14 +44,14 @@ class heap{
     }
     
     void resize(size_t s){
-        T* tmp = static_cast<T*> (realloc(buffer, s*sizeof(T)));
-        if (buffer == tmp)
-            return;
+        T* tmp = static_cast<T*> (malloc(s*sizeof(T)));
 
         for (int i = 0; i < size; i++){
             new (tmp+i) T(std::move(getElement(i)));
             getElement(i).T::~T();
         }
+
+        free(buffer);
        
         buffer = tmp;
         capacity = s;
@@ -60,6 +61,13 @@ public:
     heap():capacity(10){
         buffer = static_cast<T*>(malloc(capacity*sizeof(T)));
         size = 0;
+    }
+
+    ~heap(){
+        for (int i = 0; i < size;i++){
+            getElement(i).~T();
+        }
+        free(buffer);
     }
     void push(T&& c){
         if (size>capacity)
